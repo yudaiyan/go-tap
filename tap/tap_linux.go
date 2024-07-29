@@ -43,8 +43,14 @@ func DeleteTap(name string) error {
 }
 
 func AddrAdd(name string, addr string) error {
-	addr2, _ := netlink.ParseAddr(addr)
-	link, _ := netlink.LinkByName(name)
+	addr2, err := netlink.ParseAddr(addr)
+	if err != nil {
+		return err
+	}
+	link, err := netlink.LinkByName(name)
+	if err != nil {
+		return err
+	}
 	return netlink.AddrAdd(link, addr2)
 }
 

@@ -2,11 +2,8 @@ package tap
 
 import (
 	"fmt"
-	"log"
-	"net"
 
 	"github.com/songgao/water"
-	"github.com/vishvananda/netlink"
 	"golang.org/x/exp/rand"
 )
 
@@ -31,43 +28,4 @@ func CreateTap() (*water.Interface, error) {
 		return nil, fmt.Errorf("create tap %s", err.Error())
 	}
 	return iface, nil
-}
-
-func DeleteTap(name string) error {
-	link, _ := netlink.LinkByName(name)
-	if link != nil {
-		return netlink.LinkDel(link)
-	}
-	log.Printf("tap %s not found", name)
-	return nil
-}
-
-func AddrAdd(name string, addr string) error {
-	addr2, err := netlink.ParseAddr(addr)
-	if err != nil {
-		return err
-	}
-	link, err := netlink.LinkByName(name)
-	if err != nil {
-		return err
-	}
-	return netlink.AddrAdd(link, addr2)
-}
-
-func LinkSetHardwareAddr(name string, mac net.HardwareAddr) error {
-	link, _ := netlink.LinkByName(name)
-	if err := netlink.LinkSetHardwareAddr(link, mac); err != nil {
-		return err
-	}
-	return nil
-}
-
-func LinkSetUp(name string) error {
-	link, _ := netlink.LinkByName(name)
-	return netlink.LinkSetUp(link)
-}
-
-func LinkDel(name string) error {
-	link, _ := netlink.LinkByName(name)
-	return netlink.LinkDel(link)
 }
